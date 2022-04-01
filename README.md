@@ -1,7 +1,7 @@
 # 📖 Open Book Solana project
 
 ### **Welcome 👋**
-#### **instalation***
+#### **instalation**
 clone this repo and follow these commands:
 
 1. Run `npm install` at the root of your directory
