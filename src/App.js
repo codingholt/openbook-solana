@@ -9,7 +9,7 @@ const App = () => {
 
   const [walletAddress, setWalletAddress] = useState(null)
   const [Issolana, setIssolana] = useState(null);
-  const [style, setStyle] = useState('modal')
+  const [modal, setModal] = useState('no')
 
   const checkIfWalletIsConnected = async () =>{
     try{
@@ -18,7 +18,6 @@ const App = () => {
       if (solana){
           if(solana.isPhantom){
             setIssolana(true)
-            setStyle('no')
             console.log('Phatom is installed!')
             const response =  await solana.connect({onlyIfTrusted: true})
             console.log(`connected with pubkey: ${response.publicKey.toString()}`)
@@ -26,13 +25,14 @@ const App = () => {
           }
       }else{
         setIssolana(null)
+        setModal('modal')
       }
     } catch(err){
       console.error(err)
   } 
   }
 
-  const connectWallet =async () => {
+  const connectWallet = async () => {
     const { solana } = window;
     if (solana){
       const response = await solana.connect();
@@ -77,7 +77,7 @@ const App = () => {
           <p className="sub-text">
             everyone can write something in the book ✨
           </p>
-          <div className={style} onClick={() => setStyle('no')}>
+          <div className={modal} onClick={() => setModal('no')}>
           {!Issolana && noWalletInstalled()}
           </div>
           {!walletAddress && renderNotConnectedContainer()}
