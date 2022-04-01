@@ -5,8 +5,15 @@ import React, {useEffect, useState} from 'react';
 const GITHUB_HANDLE = 'codingholt';
 const GITHUB_LINK = `https://github.com/${GITHUB_HANDLE}`;
 
-const App = () => {
+const TEST_TEXTS = [
+  'HI👋',
+  'Nice weather today👋',
+  'just want to thank you guys 👋',
+  'Anyone interested in working together hit me up @codingholt' 
+]
 
+
+const App = () => {
   const [walletAddress, setWalletAddress] = useState(null)
   const [Issolana, setIssolana] = useState(null);
   const [modal, setModal] = useState('no')
@@ -59,6 +66,22 @@ const App = () => {
       Connect to Wallet
     </button>
   )
+
+
+  const renderConnectedContainer = () =>(
+    <div className='connected-container'>
+      <div className='text-grid'>{
+        TEST_TEXTS.map(text =>(
+            <div className='text-item' key={text}>
+              <p>{text}</p>
+            </div>
+        ))
+      }
+      </div>
+
+    </div>
+  )
+
 //useEffect
   useEffect(()=>{
   const onLoad =  async () =>{
@@ -81,6 +104,7 @@ const App = () => {
           {!Issolana && noWalletInstalled()}
           </div>
           {!walletAddress && renderNotConnectedContainer()}
+          {walletAddress && renderConnectedContainer()}
         </div>
         <div className="footer-container">
           <img alt="github Logo" className="github-logo" src={githubLogo} />
