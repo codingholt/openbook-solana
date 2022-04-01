@@ -9,7 +9,7 @@ const TEST_TEXTS = [
   'HI👋',
   'Nice weather today👋',
   'just want to thank you guys 👋',
-  'Anyone interested in woasdfasdf asdfas fasdf asdfasf asdfas fdsdfsfrking together hit me up @codingholt' 
+  'Anyone interested in working together? hit me up @codingholt' 
 ]
 
 
@@ -17,6 +17,8 @@ const App = () => {
   const [walletAddress, setWalletAddress] = useState(null)
   const [Issolana, setIssolana] = useState(null);
   const [modal, setModal] = useState('no')
+  const [inputValue, setInputValue] = useState('');
+  const [textList, setTextList] = useState([]);
 
   const checkIfWalletIsConnected = async () =>{
     try{
@@ -48,6 +50,21 @@ const App = () => {
     }
   };
 
+  const sendText = async () =>{
+    if(inputValue.length > 0){
+      console.log(`text: ${inputValue}`)
+      setTextList([...textList, inputValue])
+      setInputValue('')
+    }else{
+      console.log('Empty input. Try again.');
+    }
+  }
+
+  const onInputChange = (event) =>{
+    const { value } = event.target;
+    setInputValue(value)
+  }
+
   const noWalletInstalled  = () => (
     <div className='NoWallet'>
       <h2>
@@ -70,13 +87,19 @@ const App = () => {
 
   const renderConnectedContainer = () =>(
     <div className='connected-container'>
-      <div className='text-grid'>{
-        TEST_TEXTS.map(text =>(
-            <div className='text-item' key={text}>
-              <p>{text}</p>
-            </div>
-        ))
-      }
+      <form onSubmit={(event) => {
+        event.preventDefault();
+        sendText()
+        }}>
+      <input type="text" placeholder='Enter your text!' value={inputValue} onChange={onInputChange}/>
+      <button type="submit" className="cta-button submit-text-button">Submit</button>
+      </form>
+      <div className='text-grid'>
+        {textList.map((text) => (
+          <div className="text-item" key={text}>
+            <p>{text}</p>
+          </div>
+        ))}
       </div>
 
     </div>
@@ -90,6 +113,17 @@ const App = () => {
   window.addEventListener('load', onLoad);
   return () => window.removeEventListener('load', onLoad);
   },[])
+
+  useEffect(() => {
+    if (walletAddress) {
+      console.log('Fetching TEXT list...');
+      
+      // Call Solana program here.
+  
+      // Set state
+      setTextList(TEST_TEXTS);
+    }
+  }, [walletAddress]);
 
   return (
     <div className="App">

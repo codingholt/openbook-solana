@@ -51,14 +51,17 @@
   font-weight: bold;
   color: white;
 }
-
+.cta-button:hover{
+  cursor: pointer;
+  opacity: 0.9;
+}
 .connect-wallet-button {
   background: -webkit-linear-gradient(left, #60c657, #35aee2);
   background-size: 200% 200%;
   animation: gradient-animation 4s ease infinite;
 }
 
-.submit-gif-button {
+.submit-text-button {
   background: -webkit-linear-gradient(left, #4e44ce, #35aee2);
   background-size: 200% 200%;
   animation: gradient-animation 4s ease infinite;
@@ -90,7 +93,7 @@
 
 .text-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   grid-gap: 1.5rem;
   justify-items: center;
   margin: 0;
