@@ -88,28 +88,39 @@
   font-weight: bold;
 }
 
-.gif-grid {
+.text-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   grid-gap: 1.5rem;
   justify-items: center;
   margin: 0;
   padding: 0;
 }
 
-.gif-grid .gif-item {
+.text-grid .text-item {
   display: flex;
   flex-direction: column;
   position: relative;
-  justify-self: center;
+  justify-content: center;
   align-self: center;
 }
 
-.gif-item img {
+.text-item{
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 100%;
-  height: 300px;
+  height: 100px;
   border-radius: 10px;
   object-fit: cover;
+  align-self: center;
+  background-color: #10131b;
+  overflow: scroll;
+}
+.text-item p{
+
+  color: #ffffff;
+
 }
 
 .connected-container input[type='text'] {

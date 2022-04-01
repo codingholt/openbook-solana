@@ -9,7 +9,7 @@ const TEST_TEXTS = [
   'HI👋',
   'Nice weather today👋',
   'just want to thank you guys 👋',
-  'Anyone interested in working together hit me up @codingholt' 
+  'Anyone interested in woasdfasdf asdfas fasdf asdfasf asdfas fdsdfsfrking together hit me up @codingholt' 
 ]
 
 
@@ -106,6 +106,7 @@ const App = () => {
           {!walletAddress && renderNotConnectedContainer()}
           {walletAddress && renderConnectedContainer()}
         </div>
+        <footer>
         <div className="footer-container">
           <img alt="github Logo" className="github-logo" src={githubLogo} />
           <a
@@ -115,6 +116,7 @@ const App = () => {
             rel="noreferrer"
           >{`built by @${GITHUB_HANDLE}`}</a>
         </div>
+        </footer>
       </div>
     </div>
   );
