@@ -119,9 +119,9 @@
   align-self: center;
   background-color: #10131b;
   overflow: scroll;
+  padding: 0;
 }
 .text-item p{
-
   color: #ffffff;
 
 }
@@ -168,4 +168,14 @@
 
 .no {
   display: none;
+}
+
+.text-item::-webkit-scrollbar{
+  width: 0;  /* Remove scrollbar space */
+  background:transparent;  /* Optional: just make scrollbar invisible */
+}
+/* Optional: show position indicator in red */
+.text-item::-webkit-scrollbar-thumb{
+  background: #FF0000;
+  width: 1;
 }
