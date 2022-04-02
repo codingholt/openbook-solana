@@ -171,11 +171,14 @@
 }
 
 .text-item::-webkit-scrollbar{
-  width: 0;  /* Remove scrollbar space */
   background:transparent;  /* Optional: just make scrollbar invisible */
 }
-/* Optional: show position indicator in red */
-.text-item::-webkit-scrollbar-thumb{
-  background: #FF0000;
-  width: 1;
+.text-item::-webkit-scrollbar-corner{
+  background:transparent;  /* Optional: just make scrollbar invisible */
+}
+.App::-webkit-scrollbar{
+  background:transparent;  /* Optional: just make scrollbar invisible */
+}
+.App::-webkit-scrollbar-corner{
+  background:transparent;  /* Optional: just make scrollbar invisible */
 }
