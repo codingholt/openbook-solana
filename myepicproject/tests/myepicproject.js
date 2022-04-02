@@ -31,7 +31,7 @@ const main = async() =>{
   let account = await program.account.baseAccount.fetch(baseAccount.publicKey)
   console.log('👀 Texts Count ', account.totalTexts.toString())
 
-  await program.rpc.addText('Hi, Farza!👋',{
+  await program.rpc.addText('input_text',{
     accounts: {
       baseAccount: baseAccount.publicKey,
       user: provider.wallet.publicKey,

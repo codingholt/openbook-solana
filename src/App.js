@@ -1,18 +1,32 @@
 import githubLogo from './assets/github-logo.svg';
 import './App.css';
 import idl from './idl.json';
-
+import kp from './keypair.json'
+import { Connection, PublicKey, clusterApiUrl } from '@solana/web3.js';
+import { Program, Provider, web3 } from '@project-serum/anchor';
 import React, {useEffect, useState} from 'react';
 // Constants
+// SystemProgram is a reference to the solana runtime
+const { SystemProgram, Keypair} = web3;
+
+//Create a keypair fo rthe account that will hold the text data
+const arr =  Object.values(kp._keypair.secretKey)
+const secret = new Uint8Array(arr)
+const baseAccount = web3.Keypair.fromSecretKey(secret)
+
+//get our program's id form the IDL file.
+const programID = new PublicKey(idl.metadata.address)
+
+//Set network to devnet
+const network = clusterApiUrl('devnet')
+
+// Controls how we want to acknowledge when a transaction is "done".
+const opts = {
+  preflightCommitment: 'processed'
+}
+
 const GITHUB_HANDLE = 'codingholt';
 const GITHUB_LINK = `https://github.com/${GITHUB_HANDLE}`;
-
-const TEST_TEXTS = [
-  'HI👋',
-  'Nice weather today👋',
-  'just want to thank you guys 👋',
-  'Anyone interested in working together? hit me up @codingholt' 
-]
 
 
 const App = () => {
@@ -53,12 +67,25 @@ const App = () => {
   };
 
   const sendText = async () =>{
-    if(inputValue.length > 0){
-      console.log(`text: ${inputValue}`)
-      setTextList([...textList, inputValue])
-      setInputValue('')
-    }else{
-      console.log('Empty input. Try again.');
+    if(inputValue.length  === 0){
+      console.log('🤔 Empty input. type some text man.');
+      return 
+    }
+    setInputValue('');
+    try{
+      const provider = getProvider();
+      const program =  new Program(idl, programID, provider);
+      await program.rpc.addText(inputValue, {
+        accounts: {
+          baseAccount: baseAccount.publicKey,
+          user: provider.wallet.publicKey,
+        },
+      });
+      console.log("✈️ Text successfully sent to program", inputValue)
+
+    await getTextList();
+    }catch(err){
+      console.log('💩 ahh shit.. an error occured in sendText: ', err)
     }
   }
 
@@ -67,6 +94,34 @@ const App = () => {
     setInputValue(value)
   }
 
+  const getProvider = () =>{
+    const connection = new Connection(network, opts.preflightCommitment);
+    const provider = new Provider(
+      connection, window.solana, opts.preflightCommitment,
+    );
+    return provider;
+  }
+
+const createTextAccount = async () => {
+  try{
+    const provider = getProvider();
+    const program = new Program(idl, programID, provider)
+    console.log('🔔 ping!')
+    await program.rpc.startStuffOff({
+      accounts:{
+        baseAccount: baseAccount.publicKey,
+        user: provider.wallet.publicKey,
+        systemProgram: SystemProgram.programId,
+      },
+      signers: [baseAccount]
+    })
+    console.log('Created a new baseAccount with address: ', baseAccount.publicKey.toString())
+    await getTextList()
+  }catch(err){
+    console.log('😟 Dang it! an error occurred in createTextAccount: ', (err))
+  }
+}
+  
   const noWalletInstalled  = () => (
     <div className='NoWallet'>
       <h2>
@@ -87,25 +142,38 @@ const App = () => {
   )
 
 
-  const renderConnectedContainer = () =>(
-    <div className='connected-container'>
-      <form onSubmit={(event) => {
-        event.preventDefault();
-        sendText()
-        }}>
-      <input type="text" placeholder='Enter your text!' value={inputValue} onChange={onInputChange}/>
-      <button type="submit" className="cta-button submit-text-button">Submit</button>
-      </form>
-      <div className='text-grid'>
-        {textList.map((text) => (
-          <div className="text-item" key={text}>
-            <p>{text}</p>
+  const renderConnectedContainer = () =>{
+      if (textList === null){
+        return(
+          <div className='connected-container'>
+            <button className='cta-button submit-text-button' onClick={createTextAccount}>
+              Do One-Time Initialization For Open Book Program Account            
+              </button>
           </div>
-        ))}
-      </div>
+        )
+        }else{
+       return(
+          <div className='connected-container'>
+           <form onSubmit={(event) => {
+             event.preventDefault();
+             sendText()
+             }}>
+           <input type="text" placeholder='Enter your text!' value={inputValue} onChange={onInputChange}/>
+           <button type="submit" className="cta-button submit-text-button">Submit</button>
+           </form>
+           <div className='text-grid'>
+           {textList.map((item, index) => (
+            <div className="text-item" key={index}>
+              {console.log(item)}
+              <p>{item}</p>
+            </div>
+          ))}
+          
+           </div>
 
-    </div>
-  )
+
+          </div>
+  )}}
 
 //useEffect
   useEffect(()=>{
@@ -116,16 +184,32 @@ const App = () => {
   return () => window.removeEventListener('load', onLoad);
   },[])
 
+
+
+  const getTextList = async () =>{
+    try{
+      const provider = getProvider();
+      const program = new Program(idl, programID, provider);
+
+
+      const account  = await program.account.baseAccount.fetch(baseAccount.publicKey);
+
+      console.log("Got the account", account)
+      setTextList(account.textList)
+    }catch(err){
+      console.log('😒 ugh.. we got an error in getTextList: ', err)
+      setTextList(null)
+    }
+  }
+
+
   useEffect(() => {
     if (walletAddress) {
-      console.log('Fetching TEXT list...');
-      
-      // Call Solana program here.
-  
-      // Set state
-      setTextList(TEST_TEXTS);
+      console.log('Fetching Text list...');
+      getTextList()
     }
   }, [walletAddress]);
+
 
   return (
     <div className="App">
