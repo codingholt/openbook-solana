@@ -1,5 +1,7 @@
 import githubLogo from './assets/github-logo.svg';
 import './App.css';
+import idl from './idl.json';
+
 import React, {useEffect, useState} from 'react';
 // Constants
 const GITHUB_HANDLE = 'codingholt';
