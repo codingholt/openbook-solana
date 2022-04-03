@@ -1,5 +1,0 @@
-[workspace]
-members = [
-    "programs/*"
-]
-cargo-features = ["edition2021"]

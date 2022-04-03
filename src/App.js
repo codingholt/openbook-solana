@@ -190,8 +190,6 @@ const createTextAccount = async () => {
     try{
       const provider = getProvider();
       const program = new Program(idl, programID, provider);
-
-     
       const account  = await program.account.baseAccount.fetch(baseAccount.publicKey);
       setTextList(account.textList)
     }catch(err){
