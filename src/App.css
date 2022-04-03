@@ -121,9 +121,8 @@
   overflow: scroll;
   padding: 0;
 }
-.text-item p{
+.text-item span{
   color: #ffffff;
-
 }
 
 .connected-container input[type='text'] {
@@ -181,4 +180,10 @@
 }
 .App::-webkit-scrollbar-corner{
   background:transparent;  /* Optional: just make scrollbar invisible */
+}
+
+.user{
+  font-style: italic;
+  color: grey;
+  font-size: small;
 }

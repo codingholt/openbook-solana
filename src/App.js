@@ -7,7 +7,7 @@ import { Program, Provider, web3 } from '@project-serum/anchor';
 import React, {useEffect, useState} from 'react';
 // Constants
 // SystemProgram is a reference to the solana runtime
-const { SystemProgram, Keypair} = web3;
+const { SystemProgram} = web3;
 
 //Create a keypair fo rthe account that will hold the text data
 const arr =  Object.values(kp._keypair.secretKey)
@@ -35,7 +35,6 @@ const App = () => {
   const [modal, setModal] = useState('no')
   const [inputValue, setInputValue] = useState('');
   const [textList, setTextList] = useState([]);
-
   const checkIfWalletIsConnected = async () =>{
     try{
       const { solana } = window;
@@ -83,7 +82,7 @@ const App = () => {
       });
       console.log("✈️ Text successfully sent to program", inputValue)
 
-    await getTextList();
+    getTextList();
     }catch(err){
       console.log('💩 ahh shit.. an error occured in sendText: ', err)
     }
@@ -164,8 +163,9 @@ const createTextAccount = async () => {
            <div className='text-grid'>
            {textList.map((item, index) => (
             <div className="text-item" key={index}>
-              {console.log(item)}
-              <p>{item}</p>
+      
+              <span>{item.submittedText}</span>
+              {<div className='user'>from: {item.userAddress.toString()}</div>}
             </div>
           ))}
           
@@ -191,10 +191,8 @@ const createTextAccount = async () => {
       const provider = getProvider();
       const program = new Program(idl, programID, provider);
 
-
+     
       const account  = await program.account.baseAccount.fetch(baseAccount.publicKey);
-
-      console.log("Got the account", account)
       setTextList(account.textList)
     }catch(err){
       console.log('😒 ugh.. we got an error in getTextList: ', err)
